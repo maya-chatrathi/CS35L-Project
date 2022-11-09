@@ -4,8 +4,9 @@ export function convertCollectionToProblems(querySnapshot){
   querySnapshot.forEach((doc) => {
     let temp = {};
     
-    const tempStars = doc.get('allstars');
-    let allstars = [];
+    const tempStars = doc.get('sumStars');
+    const numStars = doc.get('numStars');
+    /*let allstars = [];
     if(tempStars){
       for (let i = 0; i < 5; i++){
         let field = 'allstars.' + String(i+1);
@@ -16,7 +17,7 @@ export function convertCollectionToProblems(querySnapshot){
           allstars[i] = 0;
         }
       }
-    }
+    }*/
     
     let allvratings = [];
     if(allvratings){
@@ -30,13 +31,14 @@ export function convertCollectionToProblems(querySnapshot){
         }
       }
     }
+
     temp['id'] = doc.id;
     temp['image'] = doc.get('img');
     temp['title'] = doc.get('name');
     temp['isFavorite'] = false;
     temp['gym'] = doc.get('gymname');
     temp['description'] = doc.get('description');
-    temp['rating'] = averageRating(allstars, 5);
+    temp['rating'] = numStars != null ? tempStars/numStars : 0;
     temp['vrating'] = averageRating(allvratings, 11) ? Math.round(averageRating(allvratings, 11)) : doc.get('vrating');
     tempData = tempData.concat(temp);
   });
@@ -48,8 +50,10 @@ export function convertDocumentToProblem(querySnapshot){
   const doc1 = querySnapshot.data();
   let temp = {};
 
-  const tempStars = doc1['allstars'];
-  let allstars = [];
+  const sumStars = doc1['sumStars'];
+  const numStars = doc1['numStars'];
+
+  /*let allstars = [];
   if(tempStars){
     for (let i = 0; i < 5; i++){
       if (tempStars[i+1] != null){
@@ -58,7 +62,7 @@ export function convertDocumentToProblem(querySnapshot){
         allstars[i] = 0;
       }
     }
-  }
+  }*/
   
   const tempVratings = doc1['allvratings']
   let vratingExists;
@@ -81,7 +85,7 @@ export function convertDocumentToProblem(querySnapshot){
   temp['isFavorite'] = false;
   temp['gym'] = doc1['gymname'];
   temp['description'] = doc1['description'];
-  temp['rating'] = tempStars ? averageRating(allstars, 5) : 0;
+  temp['rating'] = numStars != null ? sumStars/numStars : 0;
   temp['vrating'] = vratingExists ? Math.round(averageRating(allvratings, 11)) : doc1['vrating'];
   temp['available'] = doc1['available'];
 

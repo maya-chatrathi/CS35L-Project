@@ -50,7 +50,10 @@ function ProblemDetails(props) {
 
   const updateStarRating = async (starVal) => {
     starVal = starVal / 20;
-    switch (starVal) {
+    await updateDoc(problemDoc, {"sumStars": increment(starVal)});
+    await updateDoc(problemDoc, {"numStars": increment(1)});
+
+    /*switch (starVal) {
       case 1:
         await updateDoc(problemDoc, { "allstars.1": increment(1) });
         break;
@@ -68,7 +71,7 @@ function ProblemDetails(props) {
         break;
       default:
         break;
-    }
+    }*/
     setDisableSubmit(true);
   };
 
